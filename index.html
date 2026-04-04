@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mann Property Group — Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ============================================================
+  // 🔧 PASTE YOUR FIREBASE CONFIG HERE
+  // (Get it from Firebase Console → Project Settings → Your Apps)
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyDm8pinpgW9msv5RzrnAIJGeZ_ybaAOT0E",
+    authDomain: "mann-property-group.firebaseapp.com",
+    projectId: "mann-property-group",
+    storageBucket: "mann-property-group.firebasestorage.app",
+    messagingSenderId: "882560249977",
+    appId: "1:882560249977:web:6739e5d7e839c74160e4a8"
+  };
+  // ============================================================
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window._db = db;
+  window._fbOps = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy };
+  window.dispatchEvent(new Event("firebase-ready"));
+</script>
+
+<style>
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --gold: #c8a96e;
+  --gold-dark: #a8893e;
+  --text: #1a1814;
+  --muted: #7a7568;
+  --border: #e4dfd6;
+  --danger: #c0392b;
+  --success: #27ae60;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--text);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar-logo {
+  width: 36px; height: 36px;
+  background: var(--gold);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  color: white;
+}
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; }
+.topbar-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+.topbar-badge {
+  background: var(--gold);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* ── LAYOUT ── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+.section-count {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── BUTTON ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--gold);
+  color: white;
+}
+.btn-primary:hover { background: var(--gold-dark); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+.btn-danger { background: #fdf0ef; color: var(--danger); border: 1.5px solid #f5c6c2; }
+.btn-danger:hover { background: var(--danger); color: white; }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.modal-header {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: none; cursor: pointer;
+  font-size: 18px; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--border); color: var(--text); }
+.modal-body { padding: 28px 32px; }
+.modal-footer {
+  padding: 20px 32px 28px;
+  display: flex; gap: 12px; justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+
+/* ── FORM ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-size: 13px; font-weight: 600;
+  color: var(--text); letter-spacing: 0.3px;
+}
+.form-label span { color: var(--gold); }
+.form-control {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border 0.15s;
+  outline: none;
+}
+.form-control:focus { border-color: var(--gold); background: white; }
+textarea.form-control { resize: vertical; min-height: 90px; }
+select.form-control { cursor: pointer; }
+
+.form-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* image url list */
+.img-list { display: flex; flex-direction: column; gap: 8px; }
+.img-row { display: flex; gap: 8px; align-items: center; }
+.img-row input { flex: 1; }
+.img-remove {
+  width: 32px; height: 32px; border-radius: 6px;
+  background: #fdf0ef; border: 1px solid #f5c6c2;
+  color: var(--danger); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.img-remove:hover { background: var(--danger); color: white; }
+.btn-add-img {
+  margin-top: 4px;
+  font-size: 13px; color: var(--gold);
+  background: none; border: 1.5px dashed var(--gold);
+  border-radius: 8px; padding: 8px 14px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  font-weight: 500; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-add-img:hover { background: #fdf8f0; }
+
+/* features checkboxes */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.feat-check {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  transition: all 0.15s;
+  user-select: none;
+}
+.feat-check:hover { border-color: var(--gold); background: #fdf8f0; }
+.feat-check input { accent-color: var(--gold); width: 15px; height: 15px; }
+.feat-check.checked { border-color: var(--gold); background: #fdf8f0; font-weight: 500; }
+
+/* ── LISTING CARDS ── */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.card-img {
+  width: 100%; height: 190px;
+  object-fit: cover;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 13px;
+}
+.card-img img { width: 100%; height: 100%; object-fit: cover; }
+.card-img-placeholder {
+  width: 100%; height: 190px;
+  background: linear-gradient(135deg, #f0ebe2 0%, #e8e2d8 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: var(--muted); gap: 8px;
+}
+.card-img-placeholder svg { opacity: 0.4; }
+
+.card-body { padding: 18px 20px; }
+.card-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px; margin-bottom: 10px;
+  letter-spacing: 0.4px; text-transform: uppercase;
+}
+.status-sale { background: #e8f5e9; color: #2e7d32; }
+.status-rent { background: #e3f2fd; color: #1565c0; }
+.status-sold { background: #fce4ec; color: #880e4f; }
+.status-leased { background: #f3e5f5; color: #6a1b9a; }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 700; margin-bottom: 4px;
+  line-height: 1.3;
+}
+.card-address { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.card-price {
+  font-size: 20px; font-weight: 700;
+  color: var(--gold-dark); margin-bottom: 12px;
+}
+.card-specs {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  font-size: 12px; color: var(--muted);
+  padding-top: 12px; border-top: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.card-spec { display: flex; align-items: center; gap: 4px; font-weight: 500; }
+
+.card-actions { display: flex; gap: 8px; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 80px 40px;
+  text-align: center;
+}
+.empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.3; }
+.empty-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--muted); margin-bottom: 8px; }
+.empty-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+/* ── TOAST ── */
+.toast-container {
+  position: fixed; bottom: 28px; right: 28px;
+  z-index: 999; display: flex; flex-direction: column; gap: 10px;
+}
+.toast {
+  background: var(--text); color: white;
+  padding: 14px 20px; border-radius: 10px;
+  font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  animation: toastIn 0.3s ease;
+  max-width: 320px;
+}
+.toast.success { background: #1b4332; border-left: 4px solid var(--success); }
+.toast.error { background: #7f1d1d; border-left: 4px solid var(--danger); }
+@keyframes toastIn {
+  from { opacity:0; transform: translateX(20px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+/* ── LOADING ── */
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px; gap: 12px; color: var(--muted); font-size: 14px;
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CONFIG BANNER ── */
+.config-banner {
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.config-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.config-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.config-sub { font-size: 13px; color: #92400e; line-height: 1.5; }
+.config-sub code {
+  background: #fef3c7; padding: 1px 6px; border-radius: 4px;
+  font-family: monospace; font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .topbar { padding: 0 16px; }
+  .main { padding: 24px 16px 60px; }
+  .modal-body, .modal-header, .modal-footer { padding-left: 20px; padding-right: 20px; }
+  .listings-grid { grid-template-columns: 1fr; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">M</div>
+    <div>
+      <div class="topbar-title">Mann Property Group</div>
+      <div class="topbar-sub">Admin Portal</div>
+    </div>
+  </div>
+  <span class="topbar-badge" id="listingCount">Loading…</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- Config warning (shown until Firebase is set up) -->
+  <div class="config-banner" id="configBanner" style="display:none">
+    <div class="config-icon">⚙️</div>
+    <div>
+      <div class="config-title">Firebase Setup Required</div>
+      <div class="config-sub">
+        Open this file in a code editor and replace the placeholder values in the <code>firebaseConfig</code> block (around line 20) with your actual Firebase project credentials.<br><br>
+        <strong>Steps:</strong> Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold-dark)">console.firebase.google.com</a> → Create a project → Add a Web App → Copy the config → Paste it here. Also enable <strong>Firestore Database</strong> in the console.
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Header -->
+  <div class="section-header">
+    <div>
+      <div class="section-title">Property Listings</div>
+      <div class="section-count" id="subCount">Loading listings…</div>
+    </div>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add New Listing
+    </button>
+  </div>
+
+  <!-- Listings Grid -->
+  <div id="listingsContainer">
+    <div class="loading"><div class="spinner"></div> Loading listings…</div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add New Listing</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+
+        <!-- Title -->
+        <div class="form-group form-full">
+          <label class="form-label">Property Title <span>*</span></label>
+          <input class="form-control" id="f-title" type="text" placeholder="e.g. Modern Family Home in Parramatta"/>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group form-full">
+          <label class="form-label">Full Address <span>*</span></label>
+          <input class="form-control" id="f-address" type="text" placeholder="e.g. 12 Oak Street, Parramatta NSW 2150"/>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label class="form-label">Price <span>*</span></label>
+          <input class="form-control" id="f-price" type="text" placeholder="e.g. $850,000 or $650/week"/>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label class="form-label">Status <span>*</span></label>
+          <select class="form-control" id="f-status">
+            <option value="For Sale">For Sale</option>
+            <option value="For Rent">For Rent</option>
+            <option value="Sold">Sold</option>
+            <option value="Leased">Leased</option>
+          </select>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+          <label class="form-label">Property Type</label>
+          <select class="form-control" id="f-type">
+            <option value="House">House</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Villa">Villa</option>
+            <option value="Land">Land</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Rural">Rural</option>
+          </select>
+        </div>
+
+        <!-- Bedrooms -->
+        <div class="form-group">
+          <label class="form-label">Bedrooms</label>
+          <input class="form-control" id="f-beds" type="number" min="0" placeholder="e.g. 4"/>
+        </div>
+
+        <!-- Bathrooms -->
+        <div class="form-group">
+          <label class="form-label">Bathrooms</label>
+          <input class="form-control" id="f-baths" type="number" min="0" placeholder="e.g. 2"/>
+        </div>
+
+        <!-- Parking -->
+        <div class="form-group">
+          <label class="form-label">Car Spaces</label>
+          <input class="form-control" id="f-cars" type="number" min="0" placeholder="e.g. 2"/>
+        </div>
+
+        <!-- Land Size -->
+        <div class="form-group">
+          <label class="form-label">Land Size</label>
+          <input class="form-control" id="f-land" type="text" placeholder="e.g. 650 sqm"/>
+        </div>
+
+        <!-- Agent Name -->
+        <div class="form-group">
+          <label class="form-label">Agent Name</label>
+          <input class="form-control" id="f-agent" type="text" placeholder="e.g. Raj Mann"/>
+        </div>
+
+        <!-- Agent Phone -->
+        <div class="form-group">
+          <label class="form-label">Agent Phone</label>
+          <input class="form-control" id="f-phone" type="text" placeholder="e.g. 0412 345 678"/>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group form-full">
+          <label class="form-label">Property Description</label>
+          <textarea class="form-control" id="f-desc" placeholder="Describe the property — location highlights, interior features, lifestyle benefits…"></textarea>
+        </div>
+
+        <!-- Image URLs -->
+        <div class="form-group form-full">
+          <label class="form-label">Property Images</label>
+          <div class="form-hint" style="margin-bottom:8px">Paste image links (URLs) below. You can upload images to Google Photos, Dropbox, or any image host and paste the link here.</div>
+          <div class="img-list" id="imgList"></div>
+          <button class="btn-add-img" onclick="addImgRow()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Another Image
+          </button>
+        </div>
+
+        <!-- Features -->
+        <div class="form-group form-full">
+          <label class="form-label">Features &amp; Inclusions</label>
+          <div class="features-grid" id="featuresGrid"></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveListing()">
+        Save Listing
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteOverlay">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Delete Listing?</div>
+      <button class="modal-close" onclick="cancelDelete()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px; color:var(--muted); line-height:1.6">
+        Are you sure you want to delete <strong id="deleteTitle"></strong>?<br>
+        This cannot be undone.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cancelDelete()">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+
+<script>
+// ── FEATURES LIST ──
+const FEATURES = [
+  "Air Conditioning","Ducted Heating","Swimming Pool","Outdoor Entertainment",
+  "Garden/Yard","Double Garage","Solar Panels","Dishwasher",
+  "Study/Home Office","Floorboards","Modern Kitchen","Ensuite",
+  "Walk-in Wardrobe","Balcony/Deck","Shed/Workshop","Pet Friendly",
+  "Close to Schools","Close to Shops","Close to Transport","Water Views"
+];
+
+let listings = [];
+let editingId = null;
+let deleteId = null;
+let db, ops;
+
+// Wait for Firebase
+window.addEventListener("firebase-ready", async () => {
+  db = window._db;
+  ops = window._fbOps;
+
+  const isConfigured = !document.querySelector('script[type="module"]').textContent.includes("YOUR_API_KEY");
+  // Note: after injection the check below handles it via error
+  await loadListings();
+});
+
+// ── LOAD LISTINGS ──
+async function loadListings() {
+  try {
+    const q = ops.query(ops.collection(db, "listings"), ops.orderBy("createdAt", "desc"));
+    const snap = await ops.getDocs(q);
+    listings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderListings();
+    updateCount();
+  } catch (err) {
+    if (err.message && err.message.includes("invalid-api-key")) {
+      document.getElementById("configBanner").style.display = "flex";
+      document.getElementById("listingsContainer").innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🔑</div>
+          <div class="empty-title">Firebase Not Configured</div>
+          <div class="empty-sub">Please follow the setup instructions above to connect to Firebase.</div>
+        </div>`;
+      document.getElementById("listingCount").textContent = "Not connected";
+      document.getElementById("subCount").textContent = "";
+    } else {
+      showToast("Error loading listings: " + err.message, "error");
+      console.error(err);
+    }
+  }
+}
+
+// ── RENDER ──
+function renderListings() {
+  const container = document.getElementById("listingsContainer");
+  if (!listings.length) {
+    container.innerHTML = `
+      <div class="listings-grid">
+        <div class="empty-state">
+          <div class="empty-icon">🏡</div>
+          <div class="empty-title">No listings yet</div>
+          <div class="empty-sub">Click "Add New Listing" to add your first property.</div>
+          <button class="btn btn-primary" onclick="openModal()">Add First Listing</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="listings-grid">${listings.map(cardHTML).join("")}</div>`;
+}
+
+function cardHTML(l) {
+  const imgHTML = l.images && l.images[0]
+    ? `<div class="card-img"><img src="${escHtml(l.images[0])}" onerror="this.parentNode.innerHTML='<div class=\\"card-img-placeholder\\"><svg width=\\"40\\" height=\\"40\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-width=\\"1.5\\" viewBox=\\"0 0 24 24\\"><rect x=\\"3\\" y=\\"3\\" width=\\"18\\" height=\\"18\\" rx=\\"2\\"/><circle cx=\\"8.5\\" cy=\\"8.5\\" r=\\"1.5\\"/><polyline points=\\"21 15 16 10 5 21\\"/></svg><span>Image unavailable</span></div>'"/></div>`
+    : `<div class="card-img-placeholder"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>No image added</span></div>`;
+
+  const statusClass = { "For Sale":"status-sale","For Rent":"status-rent","Sold":"status-sold","Leased":"status-leased" }[l.status] || "status-sale";
+
+  const specs = [
+    l.beds && `<span class="card-spec">🛏 ${l.beds} bed</span>`,
+    l.baths && `<span class="card-spec">🚿 ${l.baths} bath</span>`,
+    l.cars && `<span class="card-spec">🚗 ${l.cars} car</span>`,
+    l.land && `<span class="card-spec">📐 ${escHtml(l.land)}</span>`,
+  ].filter(Boolean).join("");
+
+  return `
+  <div class="card">
+    ${imgHTML}
+    <div class="card-body">
+      <span class="card-status ${statusClass}">${escHtml(l.status||"")}</span>
+      <div class="card-title">${escHtml(l.title||"Untitled")}</div>
+      <div class="card-address">📍 ${escHtml(l.address||"Address not set")}</div>
+      <div class="card-price">${escHtml(l.price||"Price on request")}</div>
+      ${specs ? `<div class="card-specs">${specs}</div>` : ""}
+      <div class="card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editListing('${l.id}')">✏️ Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="askDelete('${l.id}','${escHtml(l.title||"this listing").replace(/'/g,"\\'")}')">🗑 Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateCount() {
+  const n = listings.length;
+  document.getElementById("listingCount").textContent = n + " listing" + (n===1?"":"s");
+  document.getElementById("subCount").textContent = n === 0 ? "No listings yet" : `${n} propert${n===1?"y":"ies"} on the website`;
+}
+
+// ── MODAL ──
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById("modalTitle").textContent = id ? "Edit Listing" : "Add New Listing";
+  buildFeaturesGrid();
+  addImgRow(); // start with one blank image row
+
+  if (id) {
+    const l = listings.find(x => x.id === id);
+    if (l) prefillForm(l);
+  }
+  document.getElementById("modalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+  resetForm();
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById("modalOverlay")) closeModal();
+}
+
+function editListing(id) { openModal(id); }
+
+// ── FORM HELPERS ──
+function resetForm() {
+  ["f-title","f-address","f-price","f-beds","f-baths","f-cars","f-land","f-agent","f-phone","f-desc"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  document.getElementById("f-status").value = "For Sale";
+  document.getElementById("f-type").value = "House";
+  document.getElementById("imgList").innerHTML = "";
+  buildFeaturesGrid();
+  editingId = null;
+}
+
+function prefillForm(l) {
+  document.getElementById("f-title").value = l.title || "";
+  document.getElementById("f-address").value = l.address || "";
+  document.getElementById("f-price").value = l.price || "";
+  document.getElementById("f-status").value = l.status || "For Sale";
+  document.getElementById("f-type").value = l.type || "House";
+  document.getElementById("f-beds").value = l.beds || "";
+  document.getElementById("f-baths").value = l.baths || "";
+  document.getElementById("f-cars").value = l.cars || "";
+  document.getElementById("f-land").value = l.land || "";
+  document.getElementById("f-agent").value = l.agent || "";
+  document.getElementById("f-phone").value = l.phone || "";
+  document.getElementById("f-desc").value = l.description || "";
+
+  // images
+  document.getElementById("imgList").innerHTML = "";
+  (l.images || [""]).forEach(url => addImgRow(url));
+  if (!l.images || !l.images.length) addImgRow();
+
+  // features
+  const checks = document.querySelectorAll(".feat-check input");
+  checks.forEach(cb => {
+    cb.checked = (l.features || []).includes(cb.value);
+    cb.closest(".feat-check").classList.toggle("checked", cb.checked);
+  });
+}
+
+function buildFeaturesGrid() {
+  const grid = document.getElementById("featuresGrid");
+  grid.innerHTML = FEATURES.map(f => `
+    <label class="feat-check" onclick="this.classList.toggle('checked', this.querySelector('input').checked)">
+      <input type="checkbox" value="${f}" onchange="this.closest('.feat-check').classList.toggle('checked',this.checked)"/>
+      ${f}
+    </label>`).join("");
+}
+
+function addImgRow(url) {
+  const list = document.getElementById("imgList");
+  const row = document.createElement("div");
+  row.className = "img-row";
+  row.innerHTML = `
+    <input class="form-control img-url" type="url" placeholder="Paste image URL here…" value="${url||""}"/>
+    <button class="img-remove" onclick="this.parentNode.remove()" title="Remove">✕</button>`;
+  list.appendChild(row);
+}
+
+// ── SAVE ──
+async function saveListing() {
+  const title = document.getElementById("f-title").value.trim();
+  const address = document.getElementById("f-address").value.trim();
+  const price = document.getElementById("f-price").value.trim();
+
+  if (!title) { showToast("Please enter a property title.", "error"); return; }
+  if (!address) { showToast("Please enter the address.", "error"); return; }
+  if (!price) { showToast("Please enter the price.", "error"); return; }
+
+  const images = [...document.querySelectorAll(".img-url")]
+    .map(i => i.value.trim()).filter(Boolean);
+
+  const features = [...document.querySelectorAll(".feat-check input:checked")]
+    .map(cb => cb.value);
+
+  const data = {
+    title,
+    address,
+    price,
+    status: document.getElementById("f-status").value,
+    type: document.getElementById("f-type").value,
+    beds: parseInt(document.getElementById("f-beds").value) || 0,
+    baths: parseInt(document.getElementById("f-baths").value) || 0,
+    cars: parseInt(document.getElementById("f-cars").value) || 0,
+    land: document.getElementById("f-land").value.trim(),
+    agent: document.getElementById("f-agent").value.trim(),
+    phone: document.getElementById("f-phone").value.trim(),
+    description: document.getElementById("f-desc").value.trim(),
+    images,
+    features,
+  };
+
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  try {
+    if (editingId) {
+      await ops.updateDoc(ops.doc(db, "listings", editingId), { ...data, updatedAt: ops.serverTimestamp() });
+      showToast("Listing updated successfully! ✅", "success");
+    } else {
+      data.createdAt = ops.serverTimestamp();
+      await ops.addDoc(ops.collection(db, "listings"), data);
+      showToast("New listing added! ✅", "success");
+    }
+    closeModal();
+    await loadListings();
+  } catch (err) {
+    showToast("Error saving: " + err.message, "error");
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Save Listing";
+  }
+}
+
+// ── DELETE ──
+function askDelete(id, title) {
+  deleteId = id;
+  document.getElementById("deleteTitle").textContent = title;
+  document.getElementById("deleteOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function cancelDelete() {
+  deleteId = null;
+  document.getElementById("deleteOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+async function confirmDelete() {
+  if (!deleteId) return;
+  const btn = document.getElementById("confirmDeleteBtn");
+  btn.disabled = true; btn.textContent = "Deleting…";
+  try {
+    await ops.deleteDoc(ops.doc(db, "listings", deleteId));
+    showToast("Listing deleted.", "success");
+    cancelDelete();
+    await loadListings();
+  } catch (err) {
+    showToast("Error deleting: " + err.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Yes, Delete";
+  }
+}
+
+// ── TOAST ──
+function showToast(msg, type="success") {
+  const c = document.getElementById("toastContainer");
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${type==="success"?"✅":"❌"}</span> ${msg}`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ── UTIL ──
+function escHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
