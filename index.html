@@ -11,10 +11,6 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // ============================================================
-  // 🔧 PASTE YOUR FIREBASE CONFIG HERE
-  // (Get it from Firebase Console → Project Settings → Your Apps)
-  // ============================================================
   const firebaseConfig = {
     apiKey: "AIzaSyDm8pinpgW9msv5RzrnAIJGeZ_ybaAOT0E",
     authDomain: "mann-property-group.firebaseapp.com",
@@ -23,7 +19,6 @@
     messagingSenderId: "882560249977",
     appId: "1:882560249977:web:6739e5d7e839c74160e4a8"
   };
-  // ============================================================
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -70,82 +65,44 @@ body {
   top: 0;
   z-index: 100;
 }
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
 .topbar-logo {
   width: 36px; height: 36px;
   background: var(--gold);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Playfair Display', serif;
-  font-size: 18px; font-weight: 700;
-  color: white;
+  font-size: 18px; font-weight: 700; color: white;
 }
 .topbar-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; }
 .topbar-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 1px; }
 .topbar-badge {
-  background: var(--gold);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.5px;
+  background: var(--gold); color: white;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
 }
 
 /* ── LAYOUT ── */
-.main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-}
+.main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
 
 /* ── SECTION HEADER ── */
 .section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 28px;
 }
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 700;
-}
-.section-count {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 2px;
-}
+.section-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; }
+.section-count { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
 /* ── BUTTON ── */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
 }
-.btn-primary {
-  background: var(--gold);
-  color: white;
-}
+.btn-primary { background: var(--gold); color: white; }
 .btn-primary:hover { background: var(--gold-dark); transform: translateY(-1px); }
-.btn-ghost {
-  background: transparent;
-  color: var(--muted);
-  border: 1.5px solid var(--border);
-}
+.btn-ghost { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 .btn-danger { background: #fdf0ef; color: var(--danger); border: 1.5px solid #f5c6c2; }
 .btn-danger:hover { background: var(--danger); color: white; }
@@ -158,18 +115,13 @@ body {
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(4px);
   z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
+  display: none; align-items: center; justify-content: center;
   padding: 20px;
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: var(--surface);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 680px;
-  max-height: 90vh;
+  background: var(--surface); border-radius: 16px;
+  width: 100%; max-width: 700px; max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 24px 80px rgba(0,0,0,0.2);
   animation: slideUp 0.25s ease;
@@ -185,10 +137,8 @@ body {
 }
 .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
 .modal-close {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  background: var(--bg);
-  border: none; cursor: pointer;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg); border: none; cursor: pointer;
   font-size: 18px; color: var(--muted);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.15s;
@@ -205,30 +155,112 @@ body {
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .form-full { grid-column: 1 / -1; }
 .form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-label {
-  font-size: 13px; font-weight: 600;
-  color: var(--text); letter-spacing: 0.3px;
-}
+.form-label { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.3px; }
 .form-label span { color: var(--gold); }
 .form-control {
   padding: 11px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  background: var(--bg);
-  transition: border 0.15s;
-  outline: none;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--text); background: var(--bg);
+  transition: border 0.15s; outline: none;
 }
 .form-control:focus { border-color: var(--gold); background: white; }
 textarea.form-control { resize: vertical; min-height: 90px; }
 select.form-control { cursor: pointer; }
-
 .form-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-/* image url list */
-.img-list { display: flex; flex-direction: column; gap: 8px; }
+/* ── IMAGE SECTION ── */
+.img-section {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+/* Upload Drop Zone */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--gold);
+  background: #fdf8f0;
+}
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-icon {
+  width: 44px; height: 44px;
+  background: #f0ebe2; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 20px;
+}
+.upload-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+.upload-sub strong { color: var(--gold); }
+
+/* Image Preview Grid */
+.img-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.img-preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+}
+.img-preview-item img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.img-preview-remove {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px;
+  background: rgba(0,0,0,0.65); border: none;
+  border-radius: 50%; color: white; font-size: 12px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+.img-preview-remove:hover { background: var(--danger); }
+.img-preview-uploading {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.85);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px;
+}
+.img-preview-uploading .mini-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.img-preview-uploading span { font-size: 10px; color: var(--muted); }
+
+/* Divider with OR */
+.img-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 14px 0; color: var(--muted); font-size: 12px;
+}
+.img-divider::before, .img-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* URL list (kept as secondary option) */
+.img-url-list { display: flex; flex-direction: column; gap: 8px; }
 .img-row { display: flex; gap: 8px; align-items: center; }
 .img-row input { flex: 1; }
 .img-remove {
@@ -240,8 +272,7 @@ select.form-control { cursor: pointer; }
 }
 .img-remove:hover { background: var(--danger); color: white; }
 .btn-add-img {
-  margin-top: 4px;
-  font-size: 13px; color: var(--gold);
+  margin-top: 4px; font-size: 13px; color: var(--gold);
   background: none; border: 1.5px dashed var(--gold);
   border-radius: 8px; padding: 8px 14px;
   cursor: pointer; font-family: 'DM Sans', sans-serif;
@@ -250,20 +281,33 @@ select.form-control { cursor: pointer; }
 }
 .btn-add-img:hover { background: #fdf8f0; }
 
-/* features checkboxes */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+/* Upload progress banner */
+.upload-progress-banner {
+  display: none;
+  background: #fdf8f0; border: 1.5px solid var(--gold);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; color: var(--gold-dark);
+  align-items: center; gap: 10px;
+  margin-bottom: 10px;
 }
+.upload-progress-banner.show { display: flex; }
+.upload-progress-banner .mini-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid #e8d9b8;
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* features checkboxes */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .feat-check {
   display: flex; align-items: center; gap: 8px;
   font-size: 13px; cursor: pointer;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 8px 10px; border-radius: 8px;
   border: 1.5px solid var(--border);
-  transition: all 0.15s;
-  user-select: none;
+  transition: all 0.15s; user-select: none;
 }
 .feat-check:hover { border-color: var(--gold); background: #fdf8f0; }
 .feat-check input { accent-color: var(--gold); width: 15px; height: 15px; }
@@ -275,25 +319,14 @@ select.form-control { cursor: pointer; }
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
 }
-
 .card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  overflow: hidden;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: var(--surface); border-radius: var(--radius);
+  border: 1.5px solid var(--border); overflow: hidden;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 .card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-
-.card-img {
-  width: 100%; height: 190px;
-  object-fit: cover;
-  background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font-size: 13px;
-}
-.card-img img { width: 100%; height: 100%; object-fit: cover; }
+.card-img { width: 100%; height: 190px; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card-img-placeholder {
   width: 100%; height: 190px;
   background: linear-gradient(135deg, #f0ebe2 0%, #e8e2d8 100%);
@@ -302,7 +335,6 @@ select.form-control { cursor: pointer; }
   color: var(--muted); gap: 8px;
 }
 .card-img-placeholder svg { opacity: 0.4; }
-
 .card-body { padding: 18px 20px; }
 .card-status {
   display: inline-flex; align-items: center; gap: 5px;
@@ -314,50 +346,32 @@ select.form-control { cursor: pointer; }
 .status-rent { background: #e3f2fd; color: #1565c0; }
 .status-sold { background: #fce4ec; color: #880e4f; }
 .status-leased { background: #f3e5f5; color: #6a1b9a; }
-
-.card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-weight: 700; margin-bottom: 4px;
-  line-height: 1.3;
-}
+.card-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
 .card-address { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-.card-price {
-  font-size: 20px; font-weight: 700;
-  color: var(--gold-dark); margin-bottom: 12px;
-}
+.card-price { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-bottom: 12px; }
 .card-specs {
   display: flex; gap: 14px; flex-wrap: wrap;
   font-size: 12px; color: var(--muted);
-  padding-top: 12px; border-top: 1px solid var(--border);
-  margin-bottom: 14px;
+  padding-top: 12px; border-top: 1px solid var(--border); margin-bottom: 14px;
 }
 .card-spec { display: flex; align-items: center; gap: 4px; font-weight: 500; }
-
 .card-actions { display: flex; gap: 8px; }
 
 /* ── EMPTY STATE ── */
-.empty-state {
-  grid-column: 1 / -1;
-  padding: 80px 40px;
-  text-align: center;
-}
+.empty-state { grid-column: 1 / -1; padding: 80px 40px; text-align: center; }
 .empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.3; }
 .empty-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--muted); margin-bottom: 8px; }
 .empty-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
 
 /* ── TOAST ── */
-.toast-container {
-  position: fixed; bottom: 28px; right: 28px;
-  z-index: 999; display: flex; flex-direction: column; gap: 10px;
-}
+.toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
 .toast {
   background: var(--text); color: white;
   padding: 14px 20px; border-radius: 10px;
   font-size: 14px; font-weight: 500;
   display: flex; align-items: center; gap: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-  animation: toastIn 0.3s ease;
-  max-width: 320px;
+  animation: toastIn 0.3s ease; max-width: 320px;
 }
 .toast.success { background: #1b4332; border-left: 4px solid var(--success); }
 .toast.error { background: #7f1d1d; border-left: 4px solid var(--danger); }
@@ -367,35 +381,17 @@ select.form-control { cursor: pointer; }
 }
 
 /* ── LOADING ── */
-.loading {
-  display: flex; align-items: center; justify-content: center;
-  padding: 80px; gap: 12px; color: var(--muted); font-size: 14px;
-}
-.spinner {
-  width: 20px; height: 20px;
-  border: 2px solid var(--border);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
+.loading { display: flex; align-items: center; justify-content: center; padding: 80px; gap: 12px; color: var(--muted); font-size: 14px; }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── CONFIG BANNER ── */
-.config-banner {
-  background: #fffbeb;
-  border: 1.5px solid #fcd34d;
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 32px;
-  display: flex; gap: 16px; align-items: flex-start;
+.cloudinary-setup-banner {
+  background: #eff6ff; border: 1.5px solid #bfdbfe;
+  border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px;
 }
-.config-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-.config-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.config-sub { font-size: 13px; color: #92400e; line-height: 1.5; }
-.config-sub code {
-  background: #fef3c7; padding: 1px 6px; border-radius: 4px;
-  font-family: monospace; font-size: 12px;
-}
+.cloudinary-setup-banner strong { color: #1e40af; }
+.cloudinary-setup-banner code { background: #dbeafe; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; color: #1e40af; }
 
 @media (max-width: 640px) {
   .form-grid { grid-template-columns: 1fr; }
@@ -405,6 +401,7 @@ select.form-control { cursor: pointer; }
   .modal-body, .modal-header, .modal-footer { padding-left: 20px; padding-right: 20px; }
   .listings-grid { grid-template-columns: 1fr; }
   .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .img-preview-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
 }
 </style>
 </head>
@@ -425,18 +422,6 @@ select.form-control { cursor: pointer; }
 
 <!-- MAIN CONTENT -->
 <div class="main">
-
-  <!-- Config warning (shown until Firebase is set up) -->
-  <div class="config-banner" id="configBanner" style="display:none">
-    <div class="config-icon">⚙️</div>
-    <div>
-      <div class="config-title">Firebase Setup Required</div>
-      <div class="config-sub">
-        Open this file in a code editor and replace the placeholder values in the <code>firebaseConfig</code> block (around line 20) with your actual Firebase project credentials.<br><br>
-        <strong>Steps:</strong> Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold-dark)">console.firebase.google.com</a> → Create a project → Add a Web App → Copy the config → Paste it here. Also enable <strong>Firestore Database</strong> in the console.
-      </div>
-    </div>
-  </div>
 
   <!-- Section Header -->
   <div class="section-header">
@@ -551,15 +536,44 @@ select.form-control { cursor: pointer; }
           <textarea class="form-control" id="f-desc" placeholder="Describe the property — location highlights, interior features, lifestyle benefits…"></textarea>
         </div>
 
-        <!-- Image URLs -->
+        <!-- ═══════════════════════════════════════════ -->
+        <!--  IMAGE UPLOAD SECTION                       -->
+        <!-- ═══════════════════════════════════════════ -->
         <div class="form-group form-full">
           <label class="form-label">Property Images</label>
-          <div class="form-hint" style="margin-bottom:8px">Paste image links (URLs) below. You can upload images to Google Photos, Dropbox, or any image host and paste the link here.</div>
-          <div class="img-list" id="imgList"></div>
-          <button class="btn-add-img" onclick="addImgRow()">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Another Image
-          </button>
+
+          <!-- Upload Progress Banner -->
+          <div class="upload-progress-banner" id="uploadProgressBanner">
+            <div class="mini-spinner"></div>
+            <span id="uploadProgressText">Uploading image…</span>
+          </div>
+
+          <div class="img-section">
+
+            <!-- Drop Zone / File Picker -->
+            <div class="upload-zone" id="uploadZone"
+              ondragover="handleDragOver(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleDrop(event)">
+              <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFileSelect(event)"/>
+              <div class="upload-icon">📸</div>
+              <div class="upload-title">Upload from Phone or Computer</div>
+              <div class="upload-sub">Tap to browse · Drag &amp; drop · <strong>JPG, PNG, WEBP, HEIC</strong></div>
+            </div>
+
+            <!-- Image Preview Grid -->
+            <div class="img-preview-grid" id="imgPreviewGrid"></div>
+
+            <!-- Divider -->
+            <div class="img-divider">or paste a URL instead</div>
+
+            <!-- URL fallback list -->
+            <div class="img-url-list" id="imgUrlList"></div>
+            <button class="btn-add-img" onclick="addUrlRow()">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Image URL
+            </button>
+          </div>
         </div>
 
         <!-- Features -->
@@ -588,8 +602,7 @@ select.form-control { cursor: pointer; }
     </div>
     <div class="modal-body">
       <p style="font-size:14px; color:var(--muted); line-height:1.6">
-        Are you sure you want to delete <strong id="deleteTitle"></strong>?<br>
-        This cannot be undone.
+        Are you sure you want to delete <strong id="deleteTitle"></strong>?<br>This cannot be undone.
       </p>
     </div>
     <div class="modal-footer">
@@ -604,6 +617,16 @@ select.form-control { cursor: pointer; }
 
 
 <script>
+// ══════════════════════════════════════════════
+// 🔧 CLOUDINARY CONFIG — PASTE YOUR VALUES HERE
+// ══════════════════════════════════════════════
+const CLOUDINARY_CLOUD_NAME  = "YOUR_CLOUD_NAME";    // e.g. "dxyz123abc"
+const CLOUDINARY_UPLOAD_PRESET = "YOUR_UPLOAD_PRESET"; // e.g. "mann_property_unsigned"
+// ══════════════════════════════════════════════
+
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const CLOUDINARY_CONFIGURED = CLOUDINARY_CLOUD_NAME !== "YOUR_CLOUD_NAME";
+
 // ── FEATURES LIST ──
 const FEATURES = [
   "Air Conditioning","Ducted Heating","Swimming Pool","Outdoor Entertainment",
@@ -617,14 +640,13 @@ let listings = [];
 let editingId = null;
 let deleteId = null;
 let db, ops;
+let uploadedImages = []; // tracks {url, source: 'upload'|'url'}
+let activeUploads = 0;
 
 // Wait for Firebase
 window.addEventListener("firebase-ready", async () => {
   db = window._db;
   ops = window._fbOps;
-
-  const isConfigured = !document.querySelector('script[type="module"]').textContent.includes("YOUR_API_KEY");
-  // Note: after injection the check below handles it via error
   await loadListings();
 });
 
@@ -638,15 +660,13 @@ async function loadListings() {
     updateCount();
   } catch (err) {
     if (err.message && err.message.includes("invalid-api-key")) {
-      document.getElementById("configBanner").style.display = "flex";
       document.getElementById("listingsContainer").innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">🔑</div>
           <div class="empty-title">Firebase Not Configured</div>
-          <div class="empty-sub">Please follow the setup instructions above to connect to Firebase.</div>
+          <div class="empty-sub">Please check your Firebase config at the top of this file.</div>
         </div>`;
       document.getElementById("listingCount").textContent = "Not connected";
-      document.getElementById("subCount").textContent = "";
     } else {
       showToast("Error loading listings: " + err.message, "error");
       console.error(err);
@@ -669,7 +689,6 @@ function renderListings() {
       </div>`;
     return;
   }
-
   container.innerHTML = `<div class="listings-grid">${listings.map(cardHTML).join("")}</div>`;
 }
 
@@ -679,7 +698,6 @@ function cardHTML(l) {
     : `<div class="card-img-placeholder"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>No image added</span></div>`;
 
   const statusClass = { "For Sale":"status-sale","For Rent":"status-rent","Sold":"status-sold","Leased":"status-leased" }[l.status] || "status-sale";
-
   const specs = [
     l.beds && `<span class="card-spec">🛏 ${l.beds} bed</span>`,
     l.baths && `<span class="card-spec">🚿 ${l.baths} bath</span>`,
@@ -713,9 +731,11 @@ function updateCount() {
 // ── MODAL ──
 function openModal(id) {
   editingId = id || null;
+  uploadedImages = [];
   document.getElementById("modalTitle").textContent = id ? "Edit Listing" : "Add New Listing";
   buildFeaturesGrid();
-  addImgRow(); // start with one blank image row
+  document.getElementById("imgPreviewGrid").innerHTML = "";
+  document.getElementById("imgUrlList").innerHTML = "";
 
   if (id) {
     const l = listings.find(x => x.id === id);
@@ -745,7 +765,9 @@ function resetForm() {
   });
   document.getElementById("f-status").value = "For Sale";
   document.getElementById("f-type").value = "House";
-  document.getElementById("imgList").innerHTML = "";
+  document.getElementById("imgPreviewGrid").innerHTML = "";
+  document.getElementById("imgUrlList").innerHTML = "";
+  uploadedImages = [];
   buildFeaturesGrid();
   editingId = null;
 }
@@ -764,10 +786,11 @@ function prefillForm(l) {
   document.getElementById("f-phone").value = l.phone || "";
   document.getElementById("f-desc").value = l.description || "";
 
-  // images
-  document.getElementById("imgList").innerHTML = "";
-  (l.images || [""]).forEach(url => addImgRow(url));
-  if (!l.images || !l.images.length) addImgRow();
+  // Show existing images as previews
+  (l.images || []).forEach(url => {
+    uploadedImages.push({ url, source: 'existing' });
+    addPreviewItem(url, uploadedImages.length - 1);
+  });
 
   // features
   const checks = document.querySelectorAll(".feat-check input");
@@ -786,14 +809,138 @@ function buildFeaturesGrid() {
     </label>`).join("");
 }
 
-function addImgRow(url) {
-  const list = document.getElementById("imgList");
+// ══════════════════════════════════════════════
+// IMAGE UPLOAD (CLOUDINARY)
+// ══════════════════════════════════════════════
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById("uploadZone").classList.add("dragover");
+}
+function handleDragLeave(e) {
+  document.getElementById("uploadZone").classList.remove("dragover");
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById("uploadZone").classList.remove("dragover");
+  const files = [...e.dataTransfer.files].filter(f => f.type.startsWith("image/"));
+  if (files.length) processFiles(files);
+}
+function handleFileSelect(e) {
+  const files = [...e.target.files];
+  if (files.length) processFiles(files);
+  e.target.value = ""; // reset so same file can be re-selected
+}
+
+async function processFiles(files) {
+  if (!CLOUDINARY_CONFIGURED) {
+    showToast("Please set CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET in the code first.", "error");
+    return;
+  }
+
+  for (const file of files) {
+    const idx = uploadedImages.length;
+    uploadedImages.push({ url: null, source: 'upload', uploading: true });
+
+    // Show placeholder with spinner
+    const grid = document.getElementById("imgPreviewGrid");
+    const item = document.createElement("div");
+    item.className = "img-preview-item";
+    item.id = `preview-${idx}`;
+    item.innerHTML = `
+      <div class="img-preview-uploading">
+        <div class="mini-spinner"></div>
+        <span>Uploading…</span>
+      </div>`;
+    grid.appendChild(item);
+
+    activeUploads++;
+    updateUploadBanner();
+
+    try {
+      const url = await uploadToCloudinary(file);
+      uploadedImages[idx] = { url, source: 'upload', uploading: false };
+
+      // Replace spinner with actual image
+      item.innerHTML = `
+        <img src="${escHtml(url)}" alt="Property image"/>
+        <button class="img-preview-remove" onclick="removePreviewImage(${idx})" title="Remove">✕</button>`;
+    } catch (err) {
+      uploadedImages[idx] = { url: null, source: 'upload', uploading: false, error: true };
+      item.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:11px;color:var(--danger);text-align:center;padding:6px;">Upload failed</div>`;
+      showToast("Upload failed: " + err.message, "error");
+    } finally {
+      activeUploads--;
+      updateUploadBanner();
+    }
+  }
+}
+
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  fd.append("folder", "mann-property-group");
+
+  const res = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: fd });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || "Upload failed");
+  }
+  const data = await res.json();
+  return data.secure_url;
+}
+
+function removePreviewImage(idx) {
+  uploadedImages[idx] = { url: null, removed: true };
+  const el = document.getElementById(`preview-${idx}`);
+  if (el) el.remove();
+}
+
+function addPreviewItem(url, idx) {
+  const grid = document.getElementById("imgPreviewGrid");
+  const item = document.createElement("div");
+  item.className = "img-preview-item";
+  item.id = `preview-${idx}`;
+  item.innerHTML = `
+    <img src="${escHtml(url)}" alt="Property image"/>
+    <button class="img-preview-remove" onclick="removePreviewImage(${idx})" title="Remove">✕</button>`;
+  grid.appendChild(item);
+}
+
+function updateUploadBanner() {
+  const banner = document.getElementById("uploadProgressBanner");
+  const text = document.getElementById("uploadProgressText");
+  if (activeUploads > 0) {
+    banner.classList.add("show");
+    text.textContent = `Uploading ${activeUploads} image${activeUploads > 1 ? 's' : ''}… please wait`;
+  } else {
+    banner.classList.remove("show");
+  }
+}
+
+// URL fallback
+function addUrlRow(url) {
+  const list = document.getElementById("imgUrlList");
   const row = document.createElement("div");
   row.className = "img-row";
   row.innerHTML = `
-    <input class="form-control img-url" type="url" placeholder="Paste image URL here…" value="${url||""}"/>
+    <input class="form-control img-url-input" type="url" placeholder="Paste image URL here…" value="${url||""}"/>
     <button class="img-remove" onclick="this.parentNode.remove()" title="Remove">✕</button>`;
   list.appendChild(row);
+}
+
+// ── COLLECT ALL IMAGES (uploaded + URL) ──
+function collectAllImages() {
+  const uploaded = uploadedImages
+    .filter(i => i && i.url && !i.removed)
+    .map(i => i.url);
+
+  const urls = [...document.querySelectorAll(".img-url-input")]
+    .map(i => i.value.trim())
+    .filter(Boolean);
+
+  return [...uploaded, ...urls];
 }
 
 // ── SAVE ──
@@ -802,20 +949,20 @@ async function saveListing() {
   const address = document.getElementById("f-address").value.trim();
   const price = document.getElementById("f-price").value.trim();
 
-  if (!title) { showToast("Please enter a property title.", "error"); return; }
+  if (!title)   { showToast("Please enter a property title.", "error"); return; }
   if (!address) { showToast("Please enter the address.", "error"); return; }
-  if (!price) { showToast("Please enter the price.", "error"); return; }
+  if (!price)   { showToast("Please enter the price.", "error"); return; }
 
-  const images = [...document.querySelectorAll(".img-url")]
-    .map(i => i.value.trim()).filter(Boolean);
+  if (activeUploads > 0) {
+    showToast("Please wait for images to finish uploading.", "error");
+    return;
+  }
 
-  const features = [...document.querySelectorAll(".feat-check input:checked")]
-    .map(cb => cb.value);
+  const images = collectAllImages();
+  const features = [...document.querySelectorAll(".feat-check input:checked")].map(cb => cb.value);
 
   const data = {
-    title,
-    address,
-    price,
+    title, address, price,
     status: document.getElementById("f-status").value,
     type: document.getElementById("f-type").value,
     beds: parseInt(document.getElementById("f-beds").value) || 0,
@@ -830,8 +977,7 @@ async function saveListing() {
   };
 
   const btn = document.getElementById("saveBtn");
-  btn.disabled = true;
-  btn.textContent = "Saving…";
+  btn.disabled = true; btn.textContent = "Saving…";
 
   try {
     if (editingId) {
@@ -848,8 +994,7 @@ async function saveListing() {
     showToast("Error saving: " + err.message, "error");
     console.error(err);
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Save Listing";
+    btn.disabled = false; btn.textContent = "Save Listing";
   }
 }
 
